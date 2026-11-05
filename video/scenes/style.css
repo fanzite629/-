@@ -348,3 +348,17 @@ code{font-variant-ligatures:none;font-feature-settings:'liga' 0,'calt' 0}
 #cd-title{font-size:110px;font-weight:900;margin-top:10px;background:linear-gradient(180deg,#ffffff,var(--gold) 55%,var(--orange));-webkit-background-clip:text;color:transparent;
   filter:drop-shadow(0 10px 30px rgba(40,120,255,.5));text-align:center;line-height:1.2;padding:0 40px}
 #cd-q{margin-top:50px;font-size:54px;font-weight:900;color:var(--cream);padding:20px 40px;border-radius:40px;background:rgba(70,150,255,.14);border:3px solid rgba(70,150,255,.5)}
+
+/* outro: phone with scrolling code */
+.phone{width:400px;height:240px;border-radius:44px 44px 0 0;border:8px solid #4d7fd6;border-bottom:none;background:#050f22;overflow:hidden;
+  box-shadow:0 0 70px rgba(70,150,255,.45)}
+.ph-notch{position:absolute;left:150px;top:10px;width:84px;height:18px;border-radius:12px;background:#14305e}
+.ph-screen{position:absolute;left:18px;right:18px;top:40px;bottom:0;overflow:hidden}
+.ph-code{font-size:22px;line-height:1.5}
+.ot-end{text-align:center;font-size:50px;font-weight:900;color:var(--cream)}
+.ot-end b{color:var(--gold)}
+#fadeout{position:absolute;inset:0;background:#02060f;opacity:0;pointer-events:none;z-index:100}
+.code .op{font-size:inherit;font-weight:inherit}
+.phone{width:520px;height:290px}
+.ph-notch{left:208px}
+.ph-code{font-size:26px}

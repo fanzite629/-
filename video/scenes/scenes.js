@@ -613,23 +613,16 @@ const S = {};
 
 /* ---------- OUTRO ---------- */
 (() => {
-  const hh = $('ot-hearts'); const hs = [];
-  for (let i = 0; i < 14; i++) { const s = document.createElement('span'); s.textContent = ['❤️', '🧡', '💛'][i % 3]; hh.appendChild(s); hs.push(s); }
+  const src = ['module counter(', '  input clk, rst_n,', '  output reg [3:0] cnt', ');', 'always @(posedge clk)', '  cnt <= cnt + 1;', 'endmodule', '',
+    'assign y = sel ? b : a;', 'assign y = a & b;', 'always @(posedge clk)', '  q <= {q[2:0], d};', ''].join('\n');
+  setCode($('ot-code'), src + '\n' + src);
   S.outro = { el: $('s-outro'), update(t, L, D) {
     const ti = $('ot-title'); vis(ti, t, L[0], 1e9, { ds: .4 }); ti.style.transform += ` rotate(${Math.sin(t * 2) * 1.5}deg)`;
     const ch = [...$('ot-chain').children];
     ch.forEach((e, i) => vis(e, t, L[1] + i * .55, 1e9, { ds: .5, dy: 30 }));
-    vis($('ot-cta'), t, L[2] - .1, 1e9, { dy: 120 });
-    const taps = [[L[2] + .9, 250, 870, 1], [L[2] + 1.9, 540, 870, 1], [L[2] + 2.9, 830, 870, 1]];
-    const btns = ['ot-like', 'ot-fav', 'ot-fol'];
-    btns.forEach((id, i) => { const h = t >= taps[i][0]; setCls($(id), 'hot', h); $(id).style.transform = `scale(${1 + (h ? .2 * Math.exp(-(t - taps[i][0]) * 5) : 0) + .03 * Math.sin(t * 4 + i)})`; });
-    hs.forEach((s, i) => {
-      const st = L[2] + .9 + (i % 7) * .12; const p = (t - st) / 1.8;
-      if (p < 0 || p > 1) { s.style.opacity = 0; return; }
-      const x = 230 + (hash(i) - .5) * 260 + Math.sin(p * 6 + i) * 30, y = 820 - p * 700;
-      s.style.left = x + 'px'; s.style.top = y + 'px'; s.style.opacity = 1 - p; s.style.transform = `scale(${.6 + p})`;
-    });
-    fingerState = fingerPath(t, taps, 1.2);
+    vis($('ot-phone'), t, L[2] + .2, 1e9, { dy: 160, ds: .9, din: .8 });
+    $('ot-code').style.transform = `translateY(${-((Math.max(0, t - L[2]) * 30) % (13 * 33))}px)`;
+    vis($('ot-end'), t, L[2] + 2.6, 1e9, { dy: 30, din: .8 });
   } };
 })();
 
@@ -667,6 +660,7 @@ window.renderFrame = function (t) {
     S0.update(lt, L, D);
   });
   drawFinger(fingerState);
+  $('fadeout').style.opacity = ease(prog(t, TL.duration - 1.6, 1.5));
   // progress bars
   [...$('bars').children].forEach((b, i) => { const sc = TL.scenes[i]; b.firstChild.style.width = (clamp((t - sc.start) / (sc.end - sc.start)) * 100) + '%'; });
   // chip title

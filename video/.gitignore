@@ -2,3 +2,4 @@ node_modules/
 build/
 kokoro-multi-lang-v1_1/
 *.tar.bz2
+sherpa-onnx-sense-voice-*/
