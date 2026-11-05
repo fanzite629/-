@@ -14,7 +14,7 @@ import numpy as np
 import soundfile as sf
 import sherpa_onnx
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT = os.environ.get("PROJECT_DIR") or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BUILD = os.path.join(ROOT, "build")
 SR = 44100
 LEAD_IN, LINE_GAP, SCENE_TAIL = 0.45, 0.28, 0.75
@@ -28,7 +28,9 @@ with open(f"{model_dir}/lexicon-us-en.txt", encoding="utf-8") as f:
     for line in f:
         en_lex.add(line.split(" ", 1)[0])
 
-SPECIAL = {"verilog": "very log", "sel": "sell", "we": "we"}
+SPECIAL = {"verilog": "very log", "sel": "select", "we": "w e", "dout": "d out", "din": "d in", "addr": "address",
+           "posedge": "pos edge", "negedge": "neg edge", "endmodule": "end module", "clk": "clock", "rst": "reset",
+           "cnt": "count", "mem": "memory", "assign": "assign"}
 
 
 def tts_text(s):
@@ -181,7 +183,7 @@ def chunks_of(lines):
     return out
 
 
-timeline = {"scenes": []}
+timeline = {"scenes": [], "size": script.get("size", [1080, 1920]), "output": script.get("output", "digital_system_design_douyin.mp4"), "crf": script.get("crf", 19)}
 clips = []  # (start_sec, samples)
 t = 0.0
 k_glob = 0
@@ -189,7 +191,7 @@ for si, sc in enumerate(script["scenes"]):
     last_scene = si == len(script["scenes"]) - 1
     speed = base_speed * (1 + (hash_det(si + 7) - .5) * 0.05)  # slight per-section tempo variation
     lead = LEAD_IN if sc["id"] == "hook" else CARD_LEAD
-    scene = {"id": sc["id"], "chip": sc["chip"], "q": sc.get("q", ""), "lead": lead, "start": t, "lines": []}
+    scene = {**{k: v for k, v in sc.items() if k != "lines"}, "q": sc.get("q", ""), "lead": lead, "start": t, "lines": []}
     segs = [None] * len(sc["lines"])
     for grp in chunks_of(sc["lines"]):
         texts = [spoken_of(sc["lines"][i]) for i in grp]
@@ -212,7 +214,7 @@ for si, sc in enumerate(script["scenes"]):
     for i, (ln, x) in enumerate(zip(sc["lines"], segs)):
         dur = len(x) / SR
         clips.append((cur, x))
-        scene["lines"].append({"text": ln["t"], "start": round(cur, 3), "end": round(cur + dur, 3)})
+        scene["lines"].append({**{k: v for k, v in ln.items() if k not in ("t", "s")}, "text": ln["t"], "start": round(cur, 3), "end": round(cur + dur, 3)})
         print(f"{sc['id']:9s} {i} {dur:5.2f}s  {spoken_of(ln)}")
         cur += dur + pause_after(spoken_of(ln), k_glob, i == len(sc["lines"]) - 1)
         k_glob += 1
@@ -235,6 +237,7 @@ for st, x in clips:
 
 # ---- de-"studio" the voice: EQ, a small room, and a constant room tone
 from scipy import signal
+from scipy.ndimage import uniform_filter1d
 sos_hp = signal.butter(2, 85, "highpass", fs=SR, output="sos")
 sos_lp = signal.butter(2, 9500, "lowpass", fs=SR, output="sos")
 voice = signal.sosfilt(sos_hp, voice)
@@ -308,9 +311,9 @@ music /= (np.max(np.abs(music)) or 1)
 # duck music under narration
 env = np.abs(voice)
 win = int(0.25 * SR)
-env = np.convolve(env, np.ones(win) / win, mode="same")
+env = uniform_filter1d(env, win)  # moving average (O(N), unlike np.convolve)
 duck = np.where(env > 0.01, 0.10, 0.18).astype(np.float32)
-duck = np.convolve(duck, np.ones(win) / win, mode="same")
+duck = uniform_filter1d(duck, win)
 fade = np.ones(N, dtype=np.float32)
 fi, fo = int(1.0 * SR), int(2.0 * SR)
 fade[:fi] = np.linspace(0, 1, fi)

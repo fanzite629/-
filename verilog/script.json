@@ -1,0 +1,196 @@
+{
+  "size": [1920, 1080],
+  "output": "verilog_explained.mp4",
+  "crf": 23,
+  "voice": { "sid": 3, "speed": 1.1 },
+  "scenes": [
+    {
+      "id": "intro", "chip": "开篇", "part": "VERILOG", "q": "一段 Verilog 程序到底在说什么？", "viz": "intro",
+      "code": "module and_gate(\n    input a,\n    input b,\n    output y\n);\nassign y = a & b;\nendmodule",
+      "lines": [
+        { "t": "这期我们专门来聊 Verilog，一段一段地看懂 Verilog 程序。", "s": "这期我们专门来聊Verilog，一段一段地看懂Verilog程序。" },
+        { "t": "先记住一句话：Verilog 不是在写软件，而是在[[描述电路]]。", "s": "先记住一句话：Verilog不是在写软件，而是在描述电路。", "note": "Verilog = 硬件描述语言（HDL）" },
+        { "t": "软件是一条一条按顺序执行的；而电路里的各个部分，是[[同时在工作]]的。", "note": "电路天生并行：所有部分同时工作" },
+        { "t": "所以读 Verilog 的时候，脑子里要一直想着：这段代码，会变成[[什么样的硬件]]。", "s": "所以读Verilog的时候，脑子里要一直想着：这段代码，会变成什么样的硬件。", "note": "读代码 = 在脑子里画电路" }
+      ]
+    },
+    {
+      "id": "module", "chip": "01 模块 module", "q": "Verilog 程序的基本骨架长什么样？", "viz": "ports",
+      "code": "module and_gate(\n    input a,\n    input b,\n    output y\n);\nassign y = a & b;\nendmodule",
+      "lines": [
+        { "t": "我们从最简单的与门开始。Verilog 里，所有电路都装在一个 [[module]]，也就是模块里。", "s": "我们从最简单的与门开始。Verilog里，所有电路都装在一个module，也就是模块里。", "hl": [1, 7] },
+        { "t": "第一行，module 后面是模块名 and_gate，括号里是它的[[端口列表]]。", "s": "第一行，module后面是模块名，and gate，括号里是它的端口列表。", "hl": [1], "note": "module 模块名( 端口列表 );" },
+        { "t": "[[input]] 表示输入端口，这里有 a 和 b 两个；[[output]] 是输出端口 y。", "s": "input表示输入端口，这里有a和b两个；output是输出端口y。", "hl": [2, 4], "note": "input 输入　output 输出" },
+        { "t": "右边就是它对应的硬件：一个盒子，左边两根输入线，右边一根输出线。", "hl": [1, 5] },
+        { "t": "最后用 [[endmodule]] 收尾，表示这个模块描述完了。", "s": "最后用endmodule收尾，表示这个模块描述完了。", "hl": [7], "note": "module … endmodule 必须成对出现" }
+      ]
+    },
+    {
+      "id": "assign", "chip": "02 连续赋值 assign", "q": "assign 这一行做了什么？", "viz": "gate",
+      "code": "module and_gate(\n    input a,\n    input b,\n    output y\n);\nassign y = a & b;\nendmodule",
+      "lines": [
+        { "t": "模块里真正干活的，是这一行：assign y 等于 a 与 b。", "s": "模块里真正干活的，是这一行：assign，y等于a与b。", "hl": [6] },
+        { "t": "assign 叫[[连续赋值]]。y 和 a 与 b 之间就像焊了一根线，输入一变，输出马上跟着变。", "s": "assign叫连续赋值。y和a与b之间就像焊了一根线，输入一变，输出马上跟着变。", "hl": [6], "note": "assign = 连续赋值，相当于一根导线" },
+        { "t": "& 是按位与；同理，竖线 | 是或，波浪号 ~ 是取反，尖号 ^ 是异或。", "s": "这个符号是按位与；同理，竖线是或，波浪号是取反，尖号是异或。", "hl": [6], "note": "&  与　|  或　~  非　^  异或" },
+        { "t": "我们拨一下开关：只有 a 和 b [[都是1]]，y 才是1。", "s": "我们拨一下开关：只有a和b都是一，y才是一。", "hl": [6] },
+        { "t": "把 & 换成 ^，就成了异或门：两个输入[[不一样]]，输出才是1。", "s": "把与换成异或，就成了异或门：两个输入不一样，输出才是一。", "hl": [6], "code": "module xor_gate(\n    input a,\n    input b,\n    output y\n);\nassign y = a ^ b;\nendmodule" }
+      ]
+    },
+    {
+      "id": "prim", "chip": "03 门级原语", "q": "还能怎么描述一个与门？", "viz": "prim",
+      "code": "module and_gate2(\n    input a,\n    input b,\n    output y\n);\nand u1(y, a, b);\nendmodule",
+      "lines": [
+        { "t": "同一个与门，还可以用[[门级原语]]来写。", "hl": [6] },
+        { "t": "and 是 Verilog 内置的与门，u1 是给这个门起的[[实例名]]。", "s": "and是Verilog内置的与门，u1是给这个门起的实例名。", "hl": [6], "note": "门类型 实例名( 输出, 输入1, 输入2 );" },
+        { "t": "注意括号里的顺序：[[第一个是输出]] y，后面才是输入 a 和 b。", "s": "注意括号里的顺序：第一个是输出y，后面才是输入a和b。", "hl": [6] },
+        { "t": "门级写法最接近真实电路，但电路一复杂就太繁琐了，所以实际项目更常用 assign 和 always。", "s": "门级写法最接近真实电路，但电路一复杂就太繁琐了，所以实际项目更常用assign和always。", "hl": [6], "note": "门级：直观，但写大电路太繁琐" }
+      ]
+    },
+    {
+      "id": "bits", "chip": "04 位宽与常数", "q": "[3:0] 和 4'b0101 是什么意思？", "viz": "bits",
+      "code": "wire [3:0] d;     // 4 位总线\nreg  [1:0] y;     // 2 位 reg 变量\n\nassign d = 4'b0101;\n// 4'b0101 : 4 位，二进制，值 0101\n// 8'hA7   : 8 位，十六进制，值 A7\n// 1'b1    : 1 位，二进制，值 1",
+      "lines": [
+        { "t": "往下看之前，先认识两个经常出现的写法：[[位宽]]和[[常数]]。" },
+        { "t": "方括号 3 冒号 0，表示一个 4 位的信号，最高位编号是3，最低位是0。", "s": "方括号三冒号零，表示一个四位的信号，最高位编号是三，最低位是零。", "hl": [1], "note": "[3:0]：4 位，d[3] 最高位 … d[0] 最低位" },
+        { "t": "常数的格式是：位宽、单引号、进制、数值。4'b0101 就是 4 位二进制的 0101。", "s": "常数的格式是：位宽、单引号、进制、数值。比如四撇b零一零一，就是四位二进制的零一零一。", "hl": [4, 5], "note": "位宽 ' 进制 数值　→　4'b0101" },
+        { "t": "h 表示十六进制，所以 8'hA7 是一个 8 位数；1'b1 就是一位的 1。", "s": "h表示十六进制，所以八撇h A7是一个八位数；一撇b一，就是一位的一。", "hl": [6, 7], "note": "b 二进制　h 十六进制　d 十进制" },
+        { "t": "再说 wire 和 reg：用 assign 驱动的信号是 [[wire]]；在 always 块里赋值的，要声明成 [[reg]]。", "s": "再说wire和reg：用assign驱动的信号是wire；在always块里赋值的，要声明成reg。", "hl": [1, 2], "note": "assign 驱动 → wire　always 里赋值 → reg" }
+      ]
+    },
+    {
+      "id": "mux2", "chip": "05 二选一选择器", "q": "电路怎么“二选一”？", "viz": "mux2",
+      "code": "module mux2_1(\n    input a,\n    input b,\n    input sel,\n    output y\n);\nassign y = sel ? b : a;\nendmodule",
+      "lines": [
+        { "t": "接下来进入组合逻辑。先看[[二选一数据选择器]]。", "hl": [1, 6] },
+        { "t": "它有三个输入：两路数据 a、b，再加一个选择信号 sel。", "s": "它有三个输入：两路数据a、b，再加一个选择信号sel。", "hl": [2, 4] },
+        { "t": "核心是问号冒号这个[[条件运算符]]：sel 为真就选 b，否则选 a。", "s": "核心是问号冒号这个条件运算符：sel为真就选b，否则选a。", "hl": [7], "note": "条件 ? 为真时的值 : 为假时的值" },
+        { "t": "你看，sel 一翻转，输出就立刻从 a 切到了 b。", "s": "你看，sel一翻转，输出就立刻从a切到了b。", "hl": [7] }
+      ]
+    },
+    {
+      "id": "mux4", "chip": "06 always @(*) 与 case", "q": "分支多了怎么写？", "viz": "mux4",
+      "code": "module mux4_1(\n    input [3:0] d,\n    input [1:0] sel,\n    output reg y\n);\nalways @(*) begin\n    case(sel)\n        2'b00: y = d[0];\n        2'b01: y = d[1];\n        2'b10: y = d[2];\n        2'b11: y = d[3];\n    endcase\nend\nendmodule",
+      "lines": [
+        { "t": "四选一就不好用一个问号表达了，这时候用 [[always]] 加 [[case]]。", "s": "四选一就不好用一个问号表达了，这时候用always加case。", "hl": [6, 13] },
+        { "t": "always @(*) 里的星号意思是：块里用到的任何输入一变，就重新算一遍。所以它描述的仍然是[[组合逻辑]]。", "s": "always后面括号里的星号意思是：块里用到的任何输入一变，就重新算一遍。所以它描述的仍然是组合逻辑。", "hl": [6], "note": "always @(*)：任一输入变化就重新计算 → 组合逻辑" },
+        { "t": "case 根据 sel 的值选一个分支：sel 是 00，输出 d[0]；是 01，输出 d[1]，以此类推。", "s": "case根据sel的值选一个分支：sel是零零，输出d零；是零一，输出d一，以此类推。", "hl": [7, 12] },
+        { "t": "注意 y 声明成了 [[output reg]]，因为它在 always 块里被赋值。", "s": "注意y声明成了output reg，因为它在always块里被赋值。", "hl": [4], "note": "always 里被赋值的输出 → output reg" },
+        { "t": "但它并不是真的寄存器，综合出来依然是选择器。[[reg 只是语法上的要求]]。", "s": "但它并不是真的寄存器，综合出来依然是选择器。reg只是语法上的要求。", "hl": [4], "note": "reg ≠ 寄存器（这里综合出来是组合电路）" }
+      ]
+    },
+    {
+      "id": "decoder", "chip": "07 译码器与编码器", "q": "输入是几，就点亮第几位", "viz": "decoder",
+      "code": "module decoder2_4(\n    input [1:0] a,\n    output reg [3:0] y\n);\nalways @(*) begin\n    case(a)\n        2'b00: y = 4'b0001;\n        2'b01: y = 4'b0010;\n        2'b10: y = 4'b0100;\n        2'b11: y = 4'b1000;\n    endcase\nend\nendmodule",
+      "lines": [
+        { "t": "同样的写法，还能做[[译码器]]。", "hl": [1, 4] },
+        { "t": "2 位输入 a，4 位输出 y：输入是几，就把第几位点亮，这叫[[独热码]]。", "s": "两位输入a，四位输出y：输入是几，就把第几位点亮，这叫独热码。", "hl": [6, 11], "note": "独热码：只有一位是 1" },
+        { "t": "[[编码器]]正好反过来：输入一个独热码，输出它是第几位。", "hl": [7, 10], "note": "编码器：4'b0100 → 2'b10", "code": "module encoder4_2(\n    input [3:0] d,\n    output reg [1:0] y\n);\nalways @(*) begin\n    case(d)\n        4'b0001: y = 2'b00;\n        4'b0010: y = 2'b01;\n        4'b0100: y = 2'b10;\n        4'b1000: y = 2'b11;\n        default: y = 2'b00;\n    endcase\nend\nendmodule" },
+        { "t": "编码器的 case 里还加了一个 [[default]]，用来兜住没列出来的输入，避免意外的结果。", "s": "编码器的case里还加了一个default，用来兜住没列出来的输入，避免意外的结果。", "hl": [11], "note": "default：兜底分支，覆盖所有其他情况" }
+      ]
+    },
+    {
+      "id": "cmp", "chip": "08 比较器与 if-else", "q": "两个数，谁大谁小？", "viz": "cmp",
+      "code": "module comparator(\n    input [3:0] a,\n    input [3:0] b,\n    output reg greater,\n    output reg equal,\n    output reg less\n);\nalways @(*) begin\n    if(a > b) begin\n        greater = 1'b1; equal = 1'b0; less = 1'b0;\n    end\n    else if(a == b) begin\n        greater = 1'b0; equal = 1'b1; less = 1'b0;\n    end\n    else begin\n        greater = 1'b0; equal = 1'b0; less = 1'b1;\n    end\nend\nendmodule",
+      "lines": [
+        { "t": "再看一个[[比较器]]：比较两个 4 位数 a 和 b。", "s": "再看一个比较器：比较两个四位数a和b。", "hl": [1, 7] },
+        { "t": "这里用的是 if、else if、else，写法和 C 语言很像。", "s": "这里用的是if、else if、else，写法和C语言很像。", "hl": [9, 17] },
+        { "t": "a 大于 b，greater 置 1；相等，equal 置 1；否则 less 置 1。", "s": "a大于b，greater置一；相等，equal置一；否则less置一。", "hl": [9, 17] },
+        { "t": "有个细节很重要：[[每个分支里，三个输出都赋了值]]。", "hl": [[10, 10], [13, 13], [16, 16]], "note": "每个分支都给所有输出赋值" },
+        { "t": "要是漏掉一个，综合工具会以为它要保持原值，多生成一个[[锁存器]]，这通常是 bug。", "hl": [[10, 10], [13, 13], [16, 16]], "note": "漏赋值 → 意外生成锁存器（latch）" }
+      ]
+    },
+    {
+      "id": "dff", "chip": "09 D 触发器", "q": "电路怎么“记住”一个值？", "viz": "dffwave",
+      "code": "module dff(\n    input clk,\n    input rst_n,\n    input d,\n    output reg q\n);\nalways @(posedge clk or negedge rst_n) begin\n    if(!rst_n)\n        q <= 1'b0;\n    else\n        q <= d;\nend\nendmodule",
+      "lines": [
+        { "t": "从这里开始进入[[时序逻辑]]。先看最基本的 D 触发器。", "s": "从这里开始进入时序逻辑。先看最基本的D触发器。", "hl": [1, 6] },
+        { "t": "always 后面不再是星号，而是 [[posedge clk]]：只在时钟上升沿才动作。", "s": "always后面不再是星号，而是posedge clk：只在时钟上升沿才动作。", "hl": [7], "note": "posedge 上升沿　negedge 下降沿" },
+        { "t": "后面的 or negedge rst_n 是复位。rst_n 末尾的 n，表示它[[低电平有效]]。", "s": "后面的or negedge rst n是复位。rst n末尾的n，表示它低电平有效。", "hl": [7], "note": "rst_n：_n 表示低电平有效" },
+        { "t": "所以 rst_n 一拉低，q 立刻清零；不复位的时候，每个上升沿把 d 存进 q。", "s": "所以rst n一拉低，q立刻清零；不复位的时候，每个上升沿把d存进q。", "hl": [8, 11] },
+        { "t": "注意这里用的是小于等于号，叫[[非阻塞赋值]]，时序逻辑都用它。为什么？后面专门讲。", "hl": [[9, 9], [11, 11]], "note": "<=  非阻塞赋值（时序逻辑）" }
+      ]
+    },
+    {
+      "id": "jk", "chip": "10 使能、JK 与 T 触发器", "q": "触发器还能怎么变？", "viz": "jk",
+      "code": "module dff_en(\n    input clk,\n    input rst_n,\n    input en,\n    input d,\n    output reg q\n);\nalways @(posedge clk or negedge rst_n) begin\n    if(!rst_n)\n        q <= 1'b0;\n    else if(en)\n        q <= d;\nend\nendmodule",
+      "lines": [
+        { "t": "给 D 触发器加一个使能 en：[[en 为 1 才更新]]，否则 q 保持不变。", "s": "给D触发器加一个使能en：en为一才更新，否则q保持不变。", "hl": [11, 12], "note": "else if(en)：使能控制" },
+        { "t": "再看 JK 触发器。花括号 j 逗号 k 叫[[拼接]]，把两个 1 位信号拼成一个 2 位数。", "s": "再看JK触发器。花括号j逗号k叫拼接，把两个一位信号拼成一个两位数。", "hl": [12], "note": "{j, k}：拼接成 2 位", "code": "module jk_ff(\n    input clk,\n    input rst_n,\n    input j,\n    input k,\n    output reg q\n);\nalways @(posedge clk or negedge rst_n) begin\n    if(!rst_n)\n        q <= 1'b0;\n    else begin\n        case({j,k})\n            2'b00: q <= q;\n            2'b01: q <= 1'b0;\n            2'b10: q <= 1'b1;\n            2'b11: q <= ~q;\n        endcase\n    end\nend\nendmodule" },
+        { "t": "00 保持，01 清零，10 置一，11 翻转。", "s": "零零保持，零一清零，一零置一，一一翻转。", "hl": [13, 16] },
+        { "t": "T 触发器更简单：t 为 1 时，q 取反，每来一个时钟就[[翻转一次]]。", "s": "T触发器更简单：t为一时，q取反，每来一个时钟就翻转一次。", "hl": [10, 11], "note": "q <= ~q：翻转", "code": "module t_ff(\n    input clk,\n    input rst_n,\n    input t,\n    output reg q\n);\nalways @(posedge clk or negedge rst_n) begin\n    if(!rst_n)\n        q <= 1'b0;\n    else if(t)\n        q <= ~q;\nend\nendmodule" }
+      ]
+    },
+    {
+      "id": "counter", "chip": "11 计数器", "q": "怎么让电路自己数数？", "viz": "counterwave",
+      "code": "module counter4(\n    input clk,\n    input rst_n,\n    output reg [3:0] cnt\n);\nalways @(posedge clk or negedge rst_n) begin\n    if(!rst_n)\n        cnt <= 4'b0000;\n    else\n        cnt <= cnt + 1'b1;\nend\nendmodule",
+      "lines": [
+        { "t": "把触发器扩展成多位，再加上一个加法，就是[[计数器]]。", "hl": [4] },
+        { "t": "cnt 是 4 位的，每个时钟上升沿，cnt 等于 cnt 加 1。", "s": "cnt是四位的，每个时钟上升沿，cnt等于cnt加一。", "hl": [10], "note": "cnt <= cnt + 1'b1;" },
+        { "t": "加到 1111 再加一，会[[溢出回到 0000]]，所以它从 0 数到 15，周而复始。", "s": "加到一一一一再加一，会溢出回到零零零零，所以它从零数到十五，周而复始。", "hl": [10], "note": "4 位：0 → 15 → 0 循环" },
+        { "t": "在 else 后面加个 if(en)，就成了[[可控计数器]]：en 为 1 才计数。", "s": "在else后面加个if en，就成了可控计数器：en为一才计数。", "hl": [9, 10], "note": "else if(en) cnt <= cnt + 1'b1;" }
+      ]
+    },
+    {
+      "id": "shift", "chip": "12 移位寄存器", "q": "数据怎么一格一格地挪？", "viz": "shift",
+      "code": "module shift_reg(\n    input clk,\n    input rst_n,\n    input d,\n    output reg [3:0] q\n);\nalways @(posedge clk or negedge rst_n) begin\n    if(!rst_n)\n        q <= 4'b0000;\n    else\n        q <= {q[2:0], d};\nend\nendmodule",
+      "lines": [
+        { "t": "移位寄存器和计数器只差一行，关键是这个[[拼接]]。", "hl": [11] },
+        { "t": "q[2:0] 取出 q 的低三位，后面再拼上新的输入 d，组成新的 4 位数。", "s": "q二比零，取出q的低三位，后面再拼上新的输入d，组成新的四位数。", "hl": [11], "note": "{q[2:0], d}：低 3 位 + 新输入" },
+        { "t": "结果就是：每个时钟，所有位整体[[左移一格]]，最高位被挤出去，d 从最低位进来。", "s": "结果就是：每个时钟，所有位整体左移一格，最高位被挤出去，d从最低位进来。", "hl": [11] }
+      ]
+    },
+    {
+      "id": "nb", "chip": "13 阻塞 = 与非阻塞 <=", "q": "= 和 <= 到底差在哪？", "viz": "swap",
+      "code": "// 非阻塞赋值：a、b 交换\nalways @(posedge clk) begin\n    a <= b;\n    b <= a;\nend\n\n// 阻塞赋值：结果不同！\nalways @(posedge clk) begin\n    a = b;\n    b = a;\nend",
+      "lines": [
+        { "t": "现在回答前面的问题：等号和小于等于号，到底有什么区别？" },
+        { "t": "[[非阻塞]] <=，是在时钟沿那一刻，先把右边的值全部读好，再一起更新。所以 a 和 b 真的交换了。", "s": "非阻塞赋值，是在时钟沿那一刻，先把右边的值全部读好，再一起更新。所以a和b真的交换了。", "hl": [1, 5], "note": "<=：先全部读取，再同时更新" },
+        { "t": "[[阻塞]] = 是一句一句立即执行的：a 先变成 b，下一句再读 a，已经是新值了，结果两个都变成了 b。", "s": "阻塞赋值是一句一句立即执行的：a先变成b，下一句再读a，已经是新值了，结果两个都变成了b。", "hl": [7, 11], "note": "=：按顺序立即生效" },
+        { "t": "所以记住这条规则：[[时序逻辑用 <=，组合逻辑用 =]]。", "s": "所以记住这条规则：时序逻辑用非阻塞赋值，组合逻辑用阻塞赋值。", "note": "时序逻辑 <=　　组合逻辑 =" }
+      ]
+    },
+    {
+      "id": "hier", "chip": "14 模块例化", "q": "小模块怎么拼成大电路？", "viz": "hier",
+      "code": "module top_module(\n    input a,\n    input b,\n    input sel,\n    output y\n);\nwire w1;\nand_gate u1(\n    .a(a),\n    .b(b),\n    .y(w1)\n);\nmux2_1 u2(\n    .a(w1),\n    .b(a),\n    .sel(sel),\n    .y(y)\n);\nendmodule",
+      "lines": [
+        { "t": "电路一大，就要拆成小模块，再在顶层把它们拼起来，这叫[[模块例化]]。", "hl": [1, 6] },
+        { "t": "先声明一根内部连线 wire w1。", "s": "先声明一根内部连线，wire w1。", "hl": [7] },
+        { "t": "然后例化一个 and_gate，起名 u1。点 a 括号 a 的意思是：把子模块的 a 端口，[[接到]]顶层的 a 信号上。", "s": "然后例化一个and gate，起名u1。点a括号a的意思是：把子模块的a端口，接到顶层的a信号上。", "hl": [8, 12], "note": ".端口名( 信号名 )：按名字连接" },
+        { "t": "u1 的输出 y 接到 w1，w1 再送进选择器 u2 的 a 端口。", "s": "u1的输出y接到w1，w1再送进选择器u2的a端口。", "hl": [[11, 11], [14, 14]] },
+        { "t": "这样，两个小模块就像[[积木]]一样，拼成了一个新的电路。", "hl": [13, 18] }
+      ]
+    },
+    {
+      "id": "param", "chip": "15 参数 parameter", "q": "一份代码，怎么做出不同位宽？", "viz": "param",
+      "code": "module counter #(\n    parameter WIDTH = 8\n)(\n    input clk,\n    input rst_n,\n    output reg [WIDTH-1:0] cnt\n);\nalways @(posedge clk or negedge rst_n) begin\n    if(!rst_n)\n        cnt <= 0;\n    else\n        cnt <= cnt + 1'b1;\nend\nendmodule\n\ncounter #(8)  u1(...);  // 8 位计数器\ncounter #(16) u2(...);  // 16 位计数器",
+      "lines": [
+        { "t": "想要不同位宽的计数器，不用每次重写，用[[参数]]就行。", "hl": [1, 3] },
+        { "t": "parameter WIDTH 等于 8，给位宽一个默认值。", "s": "parameter width等于八，给位宽一个默认值。", "hl": [2], "note": "parameter：可配置的常量" },
+        { "t": "cnt 的位宽写成 WIDTH 减 1 冒号 0，跟着参数走。", "s": "cnt的位宽写成width减一冒号零，跟着参数走。", "hl": [6], "note": "[WIDTH-1:0]：位宽随参数变化" },
+        { "t": "例化时，井号括号里填 8 就是 8 位计数器，填 16 就是 16 位。[[同一份代码，到处复用]]。", "s": "例化时，井号括号里填八就是八位计数器，填十六就是十六位。同一份代码，到处复用。", "hl": [16, 17] }
+      ]
+    },
+    {
+      "id": "ram", "chip": "16 存储器 RAM", "q": "怎么用 Verilog 描述一块内存？", "viz": "ram",
+      "code": "module ram(\n    input clk,\n    input we,\n    input [3:0] addr,\n    input [7:0] din,\n    output reg [7:0] dout\n);\nreg [7:0] mem [15:0];\nalways @(posedge clk) begin\n    if(we)\n        mem[addr] <= din;\n    dout <= mem[addr];\nend\nendmodule",
+      "lines": [
+        { "t": "最后看存储器。这一行声明了一个[[数组]]：16 个单元，每个单元 8 位。", "s": "最后看存储器。这一行声明了一个数组：十六个单元，每个单元八位。", "hl": [8], "note": "reg [7:0] mem [15:0]：16 个 × 8 位" },
+        { "t": "地址 addr 是 4 位，正好能选中 16 个单元。", "s": "地址addr是四位，正好能选中十六个单元。", "hl": [4] },
+        { "t": "写使能 we 为 1 时，在时钟上升沿把 din [[写进]] mem 的 addr 位置。", "s": "写使能we为一时，在时钟上升沿，把din写进mem的addr位置。", "hl": [10, 11] },
+        { "t": "同时，每个时钟都把当前地址的数据[[读到]] dout。读写都跟着时钟走，这叫同步 RAM。", "s": "同时，每个时钟都把当前地址的数据读到dout。读写都跟着时钟走，这叫同步RAM。", "hl": [12], "note": "读写都由时钟控制 → 同步 RAM" },
+        { "t": "综合工具能认出这种写法，自动把它映射成 FPGA 里的[[块 RAM]]。", "s": "综合工具能认出这种写法，自动把它映射成FPGA里的块RAM。", "hl": [8, 13] }
+      ]
+    },
+    {
+      "id": "recap", "chip": "总结", "part": "RECAP", "q": "把今天的内容串起来", "viz": "recap",
+      "code": "module design(...);\n    // 组合逻辑\n    assign y = a & b;\n    always @(*) begin ... end   // 用 =\n\n    // 时序逻辑\n    always @(posedge clk) begin\n        q <= d;                   // 用 <=\n    end\n\n    // 层次化\n    sub_module #(16) u1(.a(a), .y(w1));\nendmodule",
+      "lines": [
+        { "t": "好，我们把今天的内容串一下。" },
+        { "t": "一个 Verilog 程序由一个个 module 组成。组合逻辑用 [[assign]] 或 [[always @(*)]]，配阻塞赋值。", "s": "一个Verilog程序由一个个module组成。组合逻辑用assign或者always星号，配阻塞赋值。", "hl": [2, 4] },
+        { "t": "时序逻辑用 [[always @(posedge clk)]]，配非阻塞赋值。", "s": "时序逻辑用always posedge clk，配非阻塞赋值。", "hl": [6, 9] },
+        { "t": "大的设计，靠[[模块例化]]和[[参数]]一层层搭起来。", "hl": [11, 12] },
+        { "t": "下次再读 Verilog，不妨一边看代码，一边在脑子里把它的电路画出来。", "s": "下次再读Verilog，不妨一边看代码，一边在脑子里把它的电路画出来。" }
+      ]
+    }
+  ]
+}

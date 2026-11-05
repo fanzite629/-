@@ -7,7 +7,7 @@ const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = path.resolve(__dirname, '..');
+const ROOT = process.env.PROJECT_DIR ? path.resolve(process.env.PROJECT_DIR) : path.resolve(__dirname, '..');
 const BUILD = path.join(ROOT, 'build');
 const timeline = JSON.parse(fs.readFileSync(path.join(BUILD, 'timeline.json'), 'utf8'));
 const pageUrl = 'file://' + path.join(ROOT, 'scenes', 'index.html');
@@ -15,7 +15,7 @@ const args = process.argv.slice(2);
 const opt = (k, d) => { const i = args.indexOf(k); return i >= 0 ? Number(args[i + 1]) : d; };
 
 async function openPage(browser, scale = 1) {
-  const page = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: scale });
+  const page = await browser.newPage({ viewport: { width: (timeline.size || [1080, 1920])[0], height: (timeline.size || [1080, 1920])[1] }, deviceScaleFactor: scale });
   await page.addInitScript((tl) => { window.__TIMELINE__ = tl; }, timeline);
   page.on('pageerror', (e) => console.error('PAGE ERROR', e.message));
   page.on('console', (m) => { if (m.type() === 'error') console.error('console:', m.text()); });
@@ -58,7 +58,7 @@ function run(cmd, a, input) {
     const a = w * per, b = Math.min(total, a + per);
     const out = path.join(segDir, `seg${w}.mp4`);
     const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps), '-c:v', 'mjpeg', '-i', '-',
-      '-c:v', 'libx264', '-preset', 'medium', '-crf', '19', '-pix_fmt', 'yuv420p', '-r', String(fps), out], { stdio: ['pipe', 'ignore', 'inherit'] });
+      '-c:v', 'libx264', '-preset', 'medium', '-crf', String(timeline.crf || 19), '-pix_fmt', 'yuv420p', '-r', String(fps), out], { stdio: ['pipe', 'ignore', 'inherit'] });
     const done = new Promise((res, rej) => ff.on('close', (c) => (c === 0 ? res() : rej(new Error('ffmpeg ' + c)))));
     for (let f = a; f < b; f++) {
       await page.evaluate((t) => window.renderFrame(t), f / fps);
@@ -72,7 +72,7 @@ function run(cmd, a, input) {
   const list = path.join(segDir, 'list.txt');
   fs.writeFileSync(list, [...Array(workers).keys()].map((w) => `file 'seg${w}.mp4'`).join('\n'));
   const outDir = path.join(ROOT, 'output'); fs.mkdirSync(outDir, { recursive: true });
-  const final = path.join(outDir, 'digital_system_design_douyin.mp4');
+  const final = path.join(outDir, timeline.output || 'digital_system_design_douyin.mp4');
   await run('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-i', path.join(BUILD, 'audio_mix.wav'),
     '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', final]);
   console.log('done', final, ((Date.now() - t0) / 1000).toFixed(0) + 's');
