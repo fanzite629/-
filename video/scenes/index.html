@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>数字系统设计基础</title>
+<link rel="stylesheet" href="../node_modules/@fontsource/noto-sans-sc/500.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/noto-sans-sc/700.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/noto-sans-sc/900.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/zcool-kuaile/400.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/jetbrains-mono/700.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="frame">
+  <div id="bg">
+    <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+    <div id="grid"></div>
+  </div>
+
+  <div id="bars"></div>
+  <div id="brand">🔬 硬核科普 · 数字系统设计基础</div>
+  <div id="chipTitle"><span id="chipText"></span></div>
+
+  <div id="stage">
+    <!-- ============ HOOK ============ -->
+    <section class="scene" id="s-hook">
+      <div class="abs" id="hk-chip" style="left:290px;top:60px">
+        <div class="chip-pins"></div>
+        <div class="chip-body"><div class="chip-grid" id="hk-grid"></div><div class="chip-label">CPU</div></div>
+      </div>
+      <div class="abs big-num" id="hk-count" style="left:0;top:640px;width:1080px">0</div>
+      <svg class="abs" id="hk-wires" style="left:90px;top:90px" width="900" height="560" viewBox="0 0 900 560"></svg>
+      <div class="abs stamp" id="hk-x" style="left:390px;top:240px">✗</div>
+      <div class="abs card code-card" id="hk-code" style="left:120px;top:200px;width:840px"><pre class="code" id="hk-code-pre"></pre></div>
+      <div class="abs stamp2" id="hk-write" style="left:620px;top:110px">写代码!</div>
+      <div class="abs hero-title" id="hk-title" style="left:0;top:330px;width:1080px">
+        <div class="ht-small">3 分钟看懂</div>
+        <div class="ht-big">数字系统设计</div>
+        <div class="ht-tags"><span>0 和 1</span><span>Verilog</span><span>FPGA</span></div>
+      </div>
+    </section>
+
+    <!-- ============ WHAT ============ -->
+    <section class="scene" id="s-what">
+      <div class="abs q-title" id="wh-q" style="left:0;top:40px;width:1080px">什么是 <b>数字系统</b>？🤔</div>
+      <div class="abs" id="wh-bits" style="left:140px;top:260px;width:800px;height:300px">
+        <div class="bit-tile" id="wh-b0" style="left:0">0</div>
+        <div class="bit-tile" id="wh-b1" style="left:300px">1</div>
+        <div class="bulb" id="wh-bulb" style="left:600px">💡</div>
+      </div>
+      <div class="abs pill-grid" id="wh-pills" style="left:90px;top:640px;width:900px">
+        <div class="pill">💾 存储</div><div class="pill">➕ 运算</div><div class="pill">📡 传输</div><div class="pill">🎛️ 控制</div>
+      </div>
+      <div class="abs ex-row" id="wh-ex" style="left:60px;top:300px;width:960px">
+        <div class="card ex"><div class="emo">⏰</div><div>电子钟</div></div>
+        <div class="card ex"><div class="emo">💻</div><div>处理器</div></div>
+        <div class="card ex"><div class="emo">🤖</div><div>机器人</div></div>
+      </div>
+      <div class="abs card" id="wh-sig" style="left:50px;top:180px;width:980px;height:760px">
+        <div class="card-h">📈 数字信号：<b>有噪声也不怕</b></div>
+        <svg width="980" height="560" viewBox="0 0 980 560" style="position:absolute;left:0;top:110px">
+          <line x1="40" x2="940" y1="250" y2="250" class="thr"/>
+          <text x="940" y="236" class="thr-t" text-anchor="end">判决线</text>
+          <text x="40" y="80" class="lvl-t">高 = 1</text>
+          <text x="40" y="440" class="lvl-t">低 = 0</text>
+          <path id="wh-wave" class="wave"/>
+        </svg>
+        <div id="wh-dec" class="dec-row"></div>
+        <div id="wh-noise" class="noise-tag">噪声强度 ▮▯▯▯</div>
+      </div>
+    </section>
+
+    <!-- ============ PARTS ============ -->
+    <section class="scene" id="s-parts">
+      <svg class="abs" style="left:0;top:0" width="1080" height="1080" viewBox="0 0 1080 1080" id="pt-svg">
+        <path d="M540 250 L540 380" class="link ctl" id="pt-l0"/>
+        <path d="M330 520 L390 520" class="link" id="pt-l1"/>
+        <path d="M690 520 L750 520" class="link" id="pt-l2"/>
+        <path d="M540 780 L540 660 M190 780 L190 660 M890 780 L890 660" class="link clk" id="pt-l3"/>
+        <text x="560" y="325" class="link-t">控制信号</text>
+      </svg>
+      <div class="abs card part" id="pt-ctl" style="left:320px;top:40px;width:440px;height:210px"><div class="emo">👨‍💼</div><div class="pn">控制单元</div><div class="pd">厂长 · 状态机</div></div>
+      <div class="abs card part" id="pt-io" style="left:30px;top:380px;width:300px;height:280px"><div class="emo">🚪</div><div class="pn">输入输出</div><div class="pd">大门</div></div>
+      <div class="abs card part" id="pt-dp" style="left:390px;top:380px;width:300px;height:280px"><div class="emo">🏭</div><div class="pn">数据通路</div><div class="pd">生产线</div></div>
+      <div class="abs card part" id="pt-mem" style="left:750px;top:380px;width:300px;height:280px"><div class="emo">📦</div><div class="pn">存储单元</div><div class="pd">仓库</div></div>
+      <div class="abs card part wide" id="pt-clk" style="left:90px;top:780px;width:900px;height:200px">
+        <div class="half"><span class="emo" id="pt-heart">❤️</span><div><div class="pn">时钟</div><div class="pd">心跳 · 统一节奏</div></div></div>
+        <div class="half"><span class="emo" id="pt-reset">🔄</span><div><div class="pn">复位</div><div class="pd">一键重启</div></div></div>
+      </div>
+      <div id="pt-dots"></div>
+    </section>
+
+    <!-- ============ KINDS ============ -->
+    <section class="scene" id="s-kinds">
+      <div class="abs q-title" id="kd-h" style="left:0;top:0;width:1080px">数字系统 <b>两大类</b></div>
+      <div class="abs card kind" id="kd-c1" style="left:60px;top:150px;width:960px;height:420px">
+        <div class="card-h">🧮 组合逻辑</div>
+        <div class="formula">输出 = f(<b>当前输入</b>)</div>
+        <div class="calc"><span id="kd-in">3 + 4</span><span class="eq">=</span><span id="kd-out">7</span></div>
+        <div class="badge dim">🚫 没有记忆</div>
+      </div>
+      <div class="abs card kind" id="kd-c2" style="left:60px;top:610px;width:960px;height:440px">
+        <div class="card-h">🛗 时序逻辑</div>
+        <div class="formula">输出 = f(输入, <b>过去状态</b>)</div>
+        <div class="floor"><span id="kd-arrow">⬆</span><span id="kd-floor">1</span><small>F</small></div>
+        <div class="badge" id="kd-mem">🧠 自带记忆</div>
+        <div class="shaft"><div class="car" id="kd-car">🛗</div></div>
+      </div>
+    </section>
+
+    <!-- ============ FLOW ============ -->
+    <section class="scene" id="s-flow">
+      <div class="abs q-title" id="fl-q" style="left:0;top:340px;width:1080px;font-size:120px">💡 → ❓ → 🔲</div>
+      <div class="abs" id="fl-list" style="left:80px;top:20px;width:920px;height:1040px">
+        <div class="fl-line"><div class="fl-fill" id="fl-fill"></div></div>
+      </div>
+      <svg class="abs" id="fl-loop" style="left:0;top:0" width="1080" height="1080"><path id="fl-loop-p" d="M900 828 C1050 828 1050 288 900 288" class="loop"/></svg>
+      <div class="abs badge big" id="fl-iter" style="left:740px;top:560px">🔁 迭代</div>
+    </section>
+
+    <!-- ============ TOPDOWN ============ -->
+    <section class="scene" id="s-topdown">
+      <div class="abs two-way" id="td-intro" style="left:0;top:300px;width:1080px">
+        <div class="card way">⬇️<b>自顶向下</b></div><div class="card way">⬆️<b>自底向上</b></div>
+      </div>
+      <div class="abs tag-top" id="td-tag1" style="left:0;top:0;width:1080px">⬇️ 自顶向下：先整体，后细节</div>
+      <svg class="abs" id="td-svg" style="left:0;top:0" width="1080" height="1080"></svg>
+      <div id="td-nodes"></div>
+      <div class="abs tag-top" id="td-tag2" style="left:0;top:0;width:1080px">⬆️ 自底向上：先积木，再拼装</div>
+      <div id="td-blocks"></div>
+      <div class="abs combo" id="td-combo" style="left:60px;top:230px;width:960px">
+        <div class="card cb"><div class="emo">🧭</div><b>自顶向下</b><span>规划系统架构</span></div>
+        <div class="plus">+</div>
+        <div class="card cb"><div class="emo">🧱</div><b>自底向上</b><span>复用模块 & IP核</span></div>
+        <div class="badge big" style="margin-top:40px">🤝 工程里常结合使用</div>
+      </div>
+    </section>
+
+    <!-- ============ DESCRIBE ============ -->
+    <section class="scene" id="s-describe">
+      <div class="abs card code-card" id="ds-editor" style="left:70px;top:120px;width:940px">
+        <div class="win-dots"><i></i><i></i><i></i><span>and_gate.v</span></div>
+        <pre class="code" id="ds-code"></pre>
+      </div>
+      <div class="abs to-hw" id="ds-hw" style="left:0;top:720px;width:1080px">📝 代码 <span>➜</span> ⚡ 电路</div>
+      <div class="abs tabs" id="ds-tabs" style="left:60px;top:0;width:960px">
+        <div class="tab">🔌 结构化</div><div class="tab">🌊 数据流</div><div class="tab">🎬 行为</div>
+      </div>
+      <div class="abs card dpanel" id="ds-p0" style="left:60px;top:150px;width:960px;height:860px">
+        <div class="ds-q">关注：<b>模块怎么连线</b></div>
+        <svg width="960" height="420" viewBox="0 0 960 420" class="sch">
+          <rect x="120" y="110" width="250" height="200" rx="26" class="blk"/><text x="245" y="200" class="blk-t">and_gate</text><text x="245" y="250" class="blk-s">u1</text>
+          <rect x="590" y="110" width="250" height="200" rx="26" class="blk"/><text x="715" y="200" class="blk-t">mux2_1</text><text x="715" y="250" class="blk-s">u2</text>
+          <path d="M370 210 L590 210" class="wire on" id="ds-w1"/><text x="480" y="190" class="wire-t">w1</text>
+          <path d="M20 160 L120 160 M20 260 L120 260 M840 210 L940 210" class="wire"/>
+        </svg>
+        <pre class="code small" id="ds-c0"></pre>
+      </div>
+      <div class="abs card dpanel" id="ds-p1" style="left:60px;top:150px;width:960px;height:860px">
+        <div class="ds-q">关注：<b>数据怎么变</b></div>
+        <pre class="code huge" id="ds-c1"></pre>
+        <div class="df-row"><div class="bitbox" id="ds-a">a=1</div><div class="op">&amp;</div><div class="bitbox" id="ds-b">b=1</div><div class="op">→</div><div class="bitbox out" id="ds-y">y=1</div></div>
+      </div>
+      <div class="abs card dpanel" id="ds-p2" style="left:60px;top:150px;width:960px;height:860px">
+        <div class="ds-q">关注：<b>系统做什么</b></div>
+        <pre class="code huge" id="ds-c2"></pre>
+        <div class="beh-row"><span class="emo" id="ds-heart">❤️</span><span>cnt =</span><span class="cnt" id="ds-cnt">0</span></div>
+      </div>
+    </section>
+
+    <!-- ============ GATES ============ -->
+    <section class="scene" id="s-gates">
+      <div class="abs card code-card" id="gt-code" style="left:60px;top:0;width:960px;height:150px">
+        <div class="gname" id="gt-name">与门 AND</div>
+        <pre class="code mid" id="gt-codetext"></pre>
+      </div>
+      <svg class="abs" style="left:0;top:0" width="1080" height="760" viewBox="0 0 1080 760">
+        <path d="M330 370 L440 370" class="wire" id="gt-wa"/>
+        <path d="M330 530 L440 530" class="wire" id="gt-wb"/>
+        <path d="M700 450 L800 450" class="wire" id="gt-wy"/>
+        <g transform="translate(430,290)">
+          <path id="gt-and" class="gate" d="M10,10 H120 A150,150 0 0 1 120,310 H10 Z"/>
+          <path id="gt-or" class="gate" d="M10,10 Q90,160 10,310 Q190,310 270,160 Q190,10 10,10 Z"/>
+          <path id="gt-xor" class="gate-x" d="M-22,10 Q58,160 -22,310"/>
+          <text x="130" y="178" class="gate-t" id="gt-sym">&amp;</text>
+        </g>
+      </svg>
+      <div class="abs lab" style="left:70px;top:330px">a</div>
+      <div class="abs lab" style="left:70px;top:490px">b</div>
+      <div class="abs toggle" id="gt-ta" style="left:150px;top:325px"><div class="knob"></div><span class="tv">0</span></div>
+      <div class="abs toggle" id="gt-tb" style="left:150px;top:485px"><div class="knob"></div><span class="tv">0</span></div>
+      <div class="abs led" id="gt-led" style="left:800px;top:370px"><span>y</span></div>
+      <div class="abs burst" id="gt-burst" style="left:880px;top:450px"></div>
+      <div class="abs tt" id="gt-tt" style="left:60px;top:760px;width:960px"></div>
+    </section>
+
+    <!-- ============ MUX ============ -->
+    <section class="scene" id="s-mux">
+      <svg class="abs" style="left:0;top:0" width="1080" height="760" viewBox="0 0 1080 760" id="mx-svg">
+        <path id="mx-pa" d="M90 170 C 300 170 360 290 470 300" class="track"/>
+        <path id="mx-pb" d="M90 570 C 300 570 360 410 470 400" class="track"/>
+        <path id="mx-py" d="M590 350 L 960 350" class="track"/>
+        <polygon points="470,210 590,270 590,430 470,490" class="mux"/>
+        <line id="mx-blade" x1="590" y1="350" x2="470" y2="300" class="blade"/>
+        <circle cx="590" cy="350" r="12" class="pivot"/>
+        <path d="M530 470 L530 640" class="wire" id="mx-selw"/>
+        <text x="530" y="250" class="mux-t">MUX</text>
+        <g id="mx-pk"></g>
+      </svg>
+      <div class="abs src" style="left:40px;top:90px">🍊 a</div>
+      <div class="abs src" style="left:40px;top:600px">🍓 b</div>
+      <div class="abs outbox" id="mx-out" style="left:940px;top:290px">y</div>
+      <div class="abs lab" style="left:340px;top:640px;font-size:52px">sel</div>
+      <div class="abs toggle" id="mx-sel" style="left:440px;top:640px"><div class="knob"></div><span class="tv">0</span></div>
+      <div class="abs card code-card" id="mx-code" style="left:60px;top:800px;width:960px;height:180px">
+        <pre class="code mid" id="mx-codetext"></pre>
+      </div>
+    </section>
+
+    <!-- ============ DFF ============ -->
+    <section class="scene" id="s-dff">
+      <div class="abs rtl-def" id="ff-def" style="left:0;top:20px;width:1080px">RTL = <b>R</b>egister <b>T</b>ransfer <b>L</b>evel<br><span>寄存器传输级</span></div>
+      <div class="abs card dffbox" id="ff-box" style="left:290px;top:20px;width:500px;height:300px">
+        <div class="dff-n">D 触发器</div>
+        <div class="pin pd"><span>D</span><i id="ff-pd">0</i></div>
+        <div class="pin pc"><span>CLK ▷</span><i id="ff-pc">0</i></div>
+        <div class="pin pq"><i id="ff-pq">0</i><span>Q</span></div>
+        <div class="flash" id="ff-flash">📸</div>
+      </div>
+      <div class="abs card code-card" id="ff-code" style="left:60px;top:350px;width:960px;height:130px"><pre class="code mid" id="ff-codetext"></pre></div>
+      <div class="abs card" id="ff-wave" style="left:40px;top:510px;width:1000px;height:520px">
+        <svg width="1000" height="520" viewBox="0 0 1000 520" id="ff-svg">
+          <defs><clipPath id="ff-clip"><rect id="ff-cliprect" x="0" y="0" width="0" height="520"/></clipPath></defs>
+          <text x="40" y="115" class="sig-t">clk</text><text x="40" y="265" class="sig-t">d</text><text x="40" y="415" class="sig-t">q</text>
+          <g id="ff-edges"></g>
+          <path id="ff-clk" class="wf clk"/><path id="ff-d" class="wf d"/>
+          <path id="ff-q" class="wf q" clip-path="url(#ff-clip)"/>
+          <line id="ff-cur" x1="0" x2="0" y1="40" y2="480" class="cursor"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ============ COUNTER ============ -->
+    <section class="scene" id="s-counter">
+      <div class="abs card code-card" id="ct-code" style="left:60px;top:0;width:960px;height:140px"><pre class="code mid" id="ct-codetext"></pre></div>
+      <div class="abs" id="ct-reg" style="left:0;top:220px;width:1080px">
+        <div class="reg-label">cnt[3:0]</div>
+        <div class="cells" id="ct-cells"></div>
+        <div class="dec"><span id="ct-heart" class="emo">❤️</span> 十进制 = <b id="ct-dec">0</b></div>
+        <div class="badge big" id="ct-wrap" style="margin:30px auto 0">🔁 1111 + 1 → 0000</div>
+      </div>
+      <div class="abs card code-card" id="sh-code" style="left:60px;top:0;width:960px;height:140px"><pre class="code mid" id="sh-codetext"></pre></div>
+      <div class="abs" id="sh-reg" style="left:0;top:240px;width:1080px;height:700px">
+        <div class="sh-frame"></div>
+        <div class="sh-lbl" style="left:115px">q[3]</div><div class="sh-lbl" style="left:295px">q[2]</div><div class="sh-lbl" style="left:475px">q[1]</div><div class="sh-lbl" style="left:655px">q[0]</div>
+        <div class="sh-lbl in" style="left:850px">d 输入</div>
+        <div id="sh-items"></div>
+        <div class="sh-arrow">⬅ 每个时钟左移一位</div>
+        <div class="queue">🧍🧍‍♀️🧍🧍‍♂️ 像排队一样</div>
+      </div>
+    </section>
+
+    <!-- ============ PARAM ============ -->
+    <section class="scene" id="s-param">
+      <div class="abs card code-card" id="pm-code" style="left:60px;top:0;width:960px;height:150px"><pre class="code mid" id="pm-codetext"></pre></div>
+      <div class="abs slider" id="pm-slider" style="left:140px;top:250px;width:800px">
+        <div class="sl-name">WIDTH</div>
+        <div class="sl-track"><div class="sl-fill" id="pm-fill"></div><div class="sl-knob" id="pm-knob"></div></div>
+        <div class="sl-ticks"><span>8</span><span>16</span></div>
+      </div>
+      <div class="abs" id="pm-bits" style="left:60px;top:470px;width:960px;height:300px"></div>
+      <div class="abs range" id="pm-range" style="left:0;top:820px;width:1080px"></div>
+      <div class="abs hier" id="pm-top" style="left:70px;top:230px;width:940px;height:640px">
+        <div class="hier-name">top_module</div>
+      </div>
+      <svg class="abs" id="pm-svg" style="left:0;top:0" width="1080" height="1080">
+        <path id="pm-w1" d="M450 550 L630 550" class="wire on"/>
+        <path d="M70 470 L170 470 M70 620 L170 620 M70 790 L740 790 L740 660 M890 550 L1010 550" class="wire" id="pm-ext"/>
+      </svg>
+      <div class="abs card blk2" id="pm-u1" style="left:170px;top:430px;width:280px;height:240px"><b>and_gate</b><span>u1</span></div>
+      <div class="abs card blk2" id="pm-u2" style="left:630px;top:430px;width:260px;height:240px"><b>mux2_1</b><span>u2</span></div>
+      <div class="abs wl" id="pm-wl" style="left:510px;top:490px">w1</div>
+      <div class="abs plab" id="pm-pa" style="left:20px;top:440px">a</div>
+      <div class="abs plab" id="pm-pb" style="left:20px;top:590px">b</div>
+      <div class="abs plab" id="pm-ps" style="left:10px;top:760px">sel</div>
+      <div class="abs plab" id="pm-py" style="left:1015px;top:520px">y</div>
+      <div class="abs badge big" id="pm-badge" style="left:250px;top:930px">🧱 层次化设计 = 搭积木</div>
+    </section>
+
+    <!-- ============ RAM ============ -->
+    <section class="scene" id="s-ram">
+      <div class="abs ram-h" id="rm-h" style="left:60px;top:0;width:960px"><b>16</b> 个格子 × 每格 <b>8</b> 位 <span>reg [7:0] mem [15:0]</span></div>
+      <div class="abs ram-grid" id="rm-grid" style="left:50px;top:170px"></div>
+      <div class="abs card sigs" id="rm-sigs" style="left:720px;top:170px;width:320px;height:640px">
+        <div class="sg"><span>❤️ clk</span><i id="rm-clk">❤️</i></div>
+        <div class="sg"><span>we</span><i id="rm-we">0</i></div>
+        <div class="sg"><span>addr</span><i id="rm-addr">0</i></div>
+        <div class="sg"><span>din</span><i id="rm-din">--</i></div>
+        <div class="sg out"><span>dout</span><i id="rm-dout">--</i></div>
+      </div>
+      <div class="abs flybyte" id="rm-fly">A7</div>
+      <div class="abs card fpga" id="rm-fpga" style="left:60px;top:800px;width:960px;height:220px">
+        <div class="fp-chip"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div><div class="pn">FPGA 块RAM</div><div class="pd">综合工具自动映射 ✨</div></div>
+      </div>
+    </section>
+
+    <!-- ============ HABITS ============ -->
+    <section class="scene" id="s-habits">
+      <div class="abs q-title" id="hb-h" style="left:0;top:0;width:1080px">工程师的 <b>3 个好习惯</b></div>
+      <div class="abs card habit" id="hb-1" style="left:60px;top:140px;width:960px;height:280px">
+        <div class="num">1</div><div class="hb-body"><div class="pn">⏱️ 同步设计</div><div class="pd">全系统听同一个时钟指挥</div>
+        <div class="sync"><i></i><i></i><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="abs card habit" id="hb-2" style="left:60px;top:450px;width:960px;height:300px">
+        <div class="num">2</div><div class="hb-body"><div class="pn">✅ 可综合代码</div>
+        <div class="assign-row"><span class="tagc">组合 · 阻塞</span><code>y = a &amp; b;</code></div>
+        <div class="assign-row"><span class="tagc">时序 · 非阻塞</span><code>q &lt;= d;</code></div></div>
+      </div>
+      <div class="abs card habit" id="hb-3" style="left:60px;top:780px;width:960px;height:280px">
+        <div class="num">3</div><div class="hb-body"><div class="pn">🧰 工程化</div>
+        <div class="tags"><span>📏 代码规范</span><span>🌿 Git 版本管理</span><span>♻️ IP 复用</span></div></div>
+      </div>
+    </section>
+
+    <!-- ============ OUTRO ============ -->
+    <section class="scene" id="s-outro">
+      <div class="abs hero-title" id="ot-title" style="left:0;top:60px;width:1080px">
+        <div class="ht-big" style="font-size:150px">0 &amp; 1</div><div class="ht-small">的艺术 ✨</div>
+      </div>
+      <div class="abs chain" id="ot-chain" style="left:40px;top:430px;width:1000px">
+        <div class="card ch"><div class="emo">🧠</div>0/1 逻辑</div><div class="arr">➜</div>
+        <div class="card ch"><div class="emo">📝</div>Verilog</div><div class="arr">➜</div>
+        <div class="card ch"><div class="emo">⚙️</div>EDA 综合</div><div class="arr">➜</div>
+        <div class="card ch"><div class="emo">🔲</div>FPGA</div>
+      </div>
+      <div class="abs phone" id="ot-phone" style="left:280px;top:660px">
+        <div class="ph-notch"></div>
+        <div class="ph-screen"><pre class="code ph-code" id="ot-code"></pre></div>
+      </div>
+      <div class="abs ot-end" id="ot-end" style="left:0;top:985px;width:1080px">芯片里的世界，是一行行<b>写出来的代码</b></div>
+    </section>
+
+    <div id="card">
+      <div class="cd-line"></div>
+      <div id="cd-part">PART 01</div>
+      <div id="cd-title">什么是数字系统</div>
+      <div id="cd-q">❓ <span id="cd-qt"></span></div>
+    </div>
+    <div id="finger">👆</div>
+    <div id="ripple"></div>
+  </div>
+
+  <div id="sub"><div id="subText"></div></div>
+  <div id="fadeout"></div>
+</div>
+<script src="scenes.js"></script>
+</body>
+</html>
