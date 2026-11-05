@@ -148,7 +148,7 @@ const S = {};
     pose($('wh-b0'), { s: on ? .9 : 1.06, o: on ? .45 : 1 });
     pose($('wh-b1'), { s: on ? 1.06 : .9, o: on ? 1 : .45 });
     pose($('wh-bulb'), { o: on ? 1 : .25, s: on ? 1.08 : .92 });
-    $('wh-bulb').style.filter = on ? 'drop-shadow(0 0 40px #ffcc44)' : 'grayscale(1) brightness(.6)';
+    $('wh-bulb').style.filter = on ? 'drop-shadow(0 0 40px #7fe3ff)' : 'grayscale(1) brightness(.6)';
     // pills
     const pills = [...$('wh-pills').children];
     $('wh-pills').style.visibility = t > L[2] - .2 && t < L[3] + .5 ? 'visible' : 'hidden';
@@ -156,7 +156,7 @@ const S = {};
     // examples
     const ex = [...$('wh-ex').children];
     $('wh-ex').style.visibility = t > L[3] - .2 && t < L[4] + .5 ? 'visible' : 'hidden';
-    ex.forEach((e, i) => { vis(e, t, L[3] + .1 + i * .7, L[4] - .1, { dy: 120 }); e.style.transform += ` translateY(${Math.sin(t * 3 + i) * 8}px)`; });
+    ex.forEach((e, i) => { vis(e, t, L[3] + .4 + i * .7, L[4] - .1, { dy: 120 }); e.style.transform += ` translateY(${Math.sin(t * 3 + i) * 8}px)`; });
     // signal chart
     const sig = $('wh-sig');
     vis(sig, t, L[4] - .05, 1e9, { dy: 100 });
@@ -289,7 +289,7 @@ const S = {};
       path.setAttribute('d', `M${p.x} ${p.y + 60} C${p.x} ${my} ${n.x} ${my} ${n.x} ${n.y - 60}`); svg.appendChild(path); n.path = path;
     }
   });
-  const bricks = [['➕ 加法器', '#ffb627', 120, 760], ['🔢 计数器', '#ff8a3c', 560, 760], ['🗃️ 寄存器', '#ff6b4a', 120, 590], ['🔣 译码器', '#ffd166', 560, 590], ['🏠 大系统', '#ffe0a8', 120, 420]];
+  const bricks = [['➕ 加法器', '#35c2ff', 120, 760], ['🔢 计数器', '#3d8bff', 560, 760], ['🗃️ 寄存器', '#6a7dff', 120, 590], ['🔣 译码器', '#8ee8ff', 560, 590], ['🏠 大系统', '#cfefff', 120, 420]];
   const bh = $('td-blocks');
   const bEls = bricks.map((b, i) => { const e = document.createElement('div'); e.className = 'brick abs' + (i === 4 ? ' roof' : ''); e.innerHTML = b[0]; e.style.background = b[1]; e.style.left = b[2] + 'px'; e.style.top = b[3] + 'px'; bh.appendChild(e); return e; });
   S.topdown = { el: $('s-topdown'), update(t, L, D) {
@@ -305,7 +305,7 @@ const S = {};
       vis(n.el, t, st, treeOut, { dy: -40 });
       if (n.path) { const pl = n.path._len || (n.path._len = n.path.getTotalLength() + 2); n.path.style.strokeDasharray = pl; n.path.style.strokeDashoffset = pl * (1 - ease(prog(t, st - .2, .45))); n.path.style.opacity = 1 - prog(t, treeOut, .3); }
     });
-    if (t > L[2] + 3.4 && t < treeOut) { by.b.el.style.boxShadow = `0 0 ${30 + 30 * pulse(t, .6)}px rgba(255,180,40,.8)`; } else by.b.el.style.boxShadow = '';
+    if (t > L[2] + 3.4 && t < treeOut) { by.b.el.style.boxShadow = `0 0 ${30 + 30 * pulse(t, .6)}px rgba(70,150,255,.8)`; } else by.b.el.style.boxShadow = '';
     // bricks
     vis($('td-tag2'), t, L[3], L[4] - .1);
     bEls.forEach((e, i) => {
@@ -432,7 +432,7 @@ const S = {};
       }
     }
     for (; k < pool.length; k++) pool[k].style.opacity = 0;
-    const ob = $('mx-out'); setText(ob, s ? 'b' : 'a'); ob.style.borderColor = s ? '#ff5e5b' : '#ffb627'; ob.style.color = s ? '#ff8a87' : '#ffd166';
+    const ob = $('mx-out'); setText(ob, s ? 'b' : 'a'); ob.style.borderColor = s ? '#ff5c8a' : '#35c2ff'; ob.style.color = s ? '#ff8fb0' : '#8ee8ff';
     vis($('mx-code'), t, L[3] - .3, 1e9, { dy: 80 });
     setCode($('mx-codetext'), s ? 'assign y = sel ? {{MARK}}b{{/MARK}} : a;' : 'assign y = sel ? b : {{MARK}}a{{/MARK}};');
     fingerState = fingerPath(t, [[tapT, 530, 685, 1]], .8);
@@ -469,7 +469,7 @@ const S = {};
     [['ff-pd', dv], ['ff-pc', cv], ['ff-pq', qv]].forEach(([id, v]) => { setText($(id), v); setCls($(id), 'one', v); });
     const since = lastEdge >= 0 ? (u - edges[lastEdge]) : 9;
     const fl = $('ff-flash'); fl.style.opacity = since < .4 ? 1 - since / .4 : 0; fl.style.transform = `scale(${1 + since})`;
-    $('ff-box').style.boxShadow = since < .3 ? `0 0 ${80 * (1 - since / .3)}px rgba(255,190,60,.8)` : '';
+    $('ff-box').style.boxShadow = since < .3 ? `0 0 ${80 * (1 - since / .3)}px rgba(70,150,255,.8)` : '';
     // emphasise d wiggle during L2..L3
     $('ff-d').style.strokeWidth = t > L[2] && t < L[3] ? 10 : 7;
   } };
@@ -552,7 +552,7 @@ const S = {};
     const w1 = $('pm-w1'); w1.style.strokeDasharray = '20 14'; w1.style.strokeDashoffset = -t * 80;
     ['pm-wl', 'pm-pa', 'pm-pb', 'pm-ps', 'pm-py'].forEach((id, i) => vis($(id), t, L[2] + 1.9 + i * .1, 1e9, { dy: 20 }));
     vis($('pm-badge'), t, L[3] - .1, 1e9, { ds: .5 });
-    if (t > L[3]) $('pm-top').style.boxShadow = `0 0 ${40 + 30 * pulse(t, 1)}px rgba(255,170,40,.45)`; else $('pm-top').style.boxShadow = '';
+    if (t > L[3]) $('pm-top').style.boxShadow = `0 0 ${40 + 30 * pulse(t, 1)}px rgba(70,150,255,.45)`; else $('pm-top').style.boxShadow = '';
   } };
 })();
 
@@ -659,9 +659,11 @@ window.renderFrame = function (t) {
     el.style.display = 'block'; el.style.visibility = 'visible';
     const lt = t - sc.start, D = sc.end - sc.start;
     const L = sc.lines.map((l) => l.start - sc.start);
-    const fin = prog(lt, 0, .3), fout = i === TL.scenes.length - 1 ? 0 : prog(lt, D - .28, .28);
+    const lead = sc.lead || 0, hasCard = lead > 1;
+    const fin = prog(lt, hasCard ? lead - .45 : 0, .35), fout = i === TL.scenes.length - 1 ? 0 : prog(lt, D - .28, .28);
     el.style.opacity = fin * (1 - fout);
     el.style.transform = `translateY(${(1 - easeOut(fin)) * 30}px) scale(${1 - .04 * fout})`;
+    drawCard(sc, lt, hasCard ? lead : 0);
     S0.update(lt, L, D);
   });
   drawFinger(fingerState);
@@ -684,5 +686,19 @@ window.renderFrame = function (t) {
     st.style.opacity = easeOut(p) * (1 - prog(t, sc.end - .25, .25));
   }
 };
+function drawCard(sc, lt, lead) {
+  const card = $('card');
+  if (!lead) { card.style.opacity = 0; return; }
+  const m = sc.chip.match(/^(\d+)\s*(.*)$/);
+  setText($('cd-part'), m ? 'PART ' + m[1] : 'RECAP');
+  setText($('cd-title'), m ? m[2] : sc.chip); setText($('cd-qt'), sc.q || '');
+  const pin = prog(lt, 0, .45), pout = prog(lt, lead - .5, .4);
+  card.style.opacity = easeOut(pin) * (1 - ease(pout));
+  card.style.transform = `scale(${lerp(1.15, 1, easeOut(pin)) * lerp(1, .9, ease(pout))})`;
+  card.querySelector('.cd-line').style.width = (420 * easeOut(prog(lt, .1, .6))) + 'px';
+  $('cd-title').style.transform = `translateY(${(1 - easeOut(prog(lt, .1, .5))) * 40}px)`;
+  $('cd-q').style.opacity = easeOut(prog(lt, .45, .4));
+  $('cd-q').style.transform = `translateY(${(1 - easeOut(prog(lt, .45, .4))) * 30}px)`;
+}
 window.setupTimeline = setup;
 if (window.__TIMELINE__) setup(window.__TIMELINE__);

@@ -13,6 +13,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BUILD = os.path.join(ROOT, "build")
 SR = 44100
 LEAD_IN, LINE_GAP, SCENE_TAIL = 0.45, 0.28, 0.75
+CARD_LEAD = 1.9  # section title card shown before each section's narration
 
 model_dir = sys.argv[1]
 os.makedirs(os.path.join(BUILD, "lines"), exist_ok=True)
@@ -67,8 +68,9 @@ timeline = {"scenes": []}
 clips = []  # (start_sec, samples)
 t = 0.0
 for sc in script["scenes"]:
-    scene = {"id": sc["id"], "chip": sc["chip"], "start": t, "lines": []}
-    cur = t + LEAD_IN
+    lead = LEAD_IN if sc["id"] == "hook" else CARD_LEAD
+    scene = {"id": sc["id"], "chip": sc["chip"], "q": sc.get("q", ""), "lead": lead, "start": t, "lines": []}
+    cur = t + lead
     for i, ln in enumerate(sc["lines"]):
         spoken = tts_text(ln.get("s", strip_markup(ln["t"])))
         a = tts.generate(spoken, sid=sid, speed=speed)
@@ -128,6 +130,8 @@ rng = np.random.default_rng(7)
 for b in range(nbars):
     ch = chords[b % 4]
     s0 = int(b * bar * SR)
+    if s0 >= N:
+        break
     for m in ch:
         p = note(midi(m - 12), bar + 0.4, "pad") * 0.10
         e = min(N, s0 + len(p)); music[s0:e] += p[:e - s0]

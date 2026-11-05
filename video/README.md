@@ -1,16 +1,16 @@
 # 3 分钟看懂数字系统设计（抖音竖屏科普视频）
 
-A vertical (1080×1920, 30 fps) short video for Douyin, based on the textbook chapter
-**第 8 章 数字系统设计基础**. It has Chinese voice-over, burned-in subtitles, a warm color
-theme, and interactive-style demos.
+A vertical (1080×1920, 30 fps) **science-explainer (科普) short video** for Douyin, based on the textbook chapter
+**第 8 章 数字系统设计基础**. It has Chinese voice-over, burned-in subtitles, a **blue tech color theme**,
+a "PART 0X + guiding question" title card before each section, and interactive-style demos.
 
 **Final video:** [`output/digital_system_design_douyin.mp4`](output/digital_system_design_douyin.mp4)
 
-## Contents (15 sections, about 4 min 50 s)
+## Contents (15 sections, about 5 min 10 s)
 
 | # | Section | Demo |
 |---|------|----------|
-| 开场 | Chips are "written" in code | Flickering chip switches, tangled wires get crossed out, code types itself |
+| 开场 | "你知道吗？" Chips are "written" in code | Flickering chip switches, tangled wires get crossed out, code types itself |
 | 01 | What is a digital system | 0/1 flip with a light bulb; noisy waveform still decodes correctly |
 | 02 | The five main parts | Factory analogy: datapath, control unit, memory, I/O, clock and reset |
 | 03 | Combinational vs. sequential | Calculator (no memory) vs. elevator (has memory) |
@@ -24,7 +24,7 @@ theme, and interactive-style demos.
 | 11 | Parameterization and hierarchy | Drag the WIDTH slider 8 to 16; module instances assembled like blocks |
 | 12 | RAM | 16×8 memory write/read and Block RAM mapping |
 | 13 | Engineering habits | Synchronous design, synthesizable code, engineering practice |
-| 总结 | Summary and call to action | Like, save, follow |
+| 本期回顾 | Summary and call to action | Like, save, follow |
 
 ## How it is made
 
